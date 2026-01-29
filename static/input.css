@@ -1,0 +1,178 @@
+@layer forms {
+  :root {
+    /* ============================================
+       INPUT COMPONENT TOKENS
+       Consuming semantic tokens from variables.css
+       ============================================ */
+
+    /* Sizing - consuming shared size tokens */
+    --input-height-small: var(--size-control-height-small);
+    --input-height-medium: var(--size-control-height-medium);
+    --input-height-large: var(--size-control-height-large);
+
+    /* Colors - Border States */
+    --input-border-color-default: var(--color-border-interactive-default);
+    --input-border-color-hover: var(--color-border-interactive-hover);
+    --input-border-color-focus: var(--color-border-interactive-active);
+    --input-border-color-error: var(--color-border-interactive-error);
+
+    /* Colors - Background & Foreground */
+    --input-bg-default: var(--color-background-input-default);
+    --input-fg-default: var(--color-foreground-input-default);
+    --input-bg-error: var(--color-background-input-error);
+    --input-fg-error: var(--color-foreground-input-error);
+
+    /* Visual */
+    --input-border-width: 1px;
+    --input-border-radius: 4px;
+
+    /* Animation */
+    --input-transition-duration: var(--transition-duration-gentle);
+    --input-transition-easing: var(--transition-easing-cubic);
+  }
+
+  /* ============================================
+     SHARED INPUT STYLES (All form controls)
+     ============================================ */
+  :is(.input, .select, .textarea, .checkbox, .radio) {
+    --_input-border-color: var(--input-border-color-default);
+    --_input-bg: var(--input-bg-default);
+    --_input-fg: var(--input-fg-default);
+
+    min-height: var(--_input-height);
+    color: var(--_input-fg);
+    background-color: var(--_input-bg);
+
+    border-radius: var(--input-border-radius);
+    border-width: var(--input-border-width);
+    border-color: var(--_input-border-color);
+    border-style: solid;
+
+    outline-width: 1px;
+    outline-offset: 0;
+    outline-color: transparent;
+    outline-style: solid;
+
+    will-change: outline-color, border-color;
+    transition:
+      outline-color var(--input-transition-duration)
+        var(--input-transition-easing),
+      border-color var(--input-transition-duration)
+        var(--input-transition-easing);
+
+    &:disabled {
+      cursor: not-allowed;
+    }
+  }
+
+  /* ============================================
+     TEXT INPUT SPECIFIC (input, select, textarea)
+     ============================================ */
+  :is(.input, .select, .textarea) {
+    --_input-height: var(--input-height-medium);
+    --_input-font-size: var(--font-size-m);
+    --_input-padding-inline: var(--spacing-s);
+
+    padding-inline: var(--_input-padding-inline);
+    padding-block: var(--spacing-2xs);
+  }
+
+  /* Size: Small */
+  :is(.input, .select, .textarea):where([data-size="s"]) {
+    --_input-height: var(--input-height-small);
+    --_input-font-size: var(--font-size-s);
+    --_input-padding-inline: var(--spacing-xs);
+  }
+
+  /* Size: Large */
+  :is(.input, .select, .textarea):where([data-size="l"]) {
+    --_input-height: var(--input-height-large);
+    --_input-font-size: var(--font-size-l);
+    --_input-padding-inline: var(--spacing-m);
+  }
+
+  /* ============================================
+     CHECKBOX & RADIO SPECIFIC
+     ============================================ */
+  :where(.radio, .checkbox) {
+    --_input-height: 1.5em;
+    width: var(--_input-height);
+    aspect-ratio: 1;
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+  }
+
+  /* Radio-specific: circular shape */
+  :where(.radio) {
+    --input-border-radius: 50%;
+  }
+
+  /* Checkbox & Radio: inner indicator */
+  :where(.radio, .checkbox)::after {
+    content: "";
+    width: 90%;
+    aspect-ratio: 1;
+    color: transparent;
+    background-color: currentColor;
+    mask-size: contain;
+    mask-repeat: no-repeat;
+    mask-position: center;
+    pointer-events: none;
+    @supports (width: round(90%, 2px)) {
+      width: round(90%, 2px); /* prevents subpixel rounding in newer browsers */
+    }
+  }
+
+  :where(.radio)::after {
+    mask-image: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"%3E%3Ccircle cx="12" cy="12" r="8" /%3E%3C/svg%3E');
+  }
+
+  :where(.checkbox)::after {
+    mask-image: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"%3E%3Cpath d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z" /%3E%3C/svg%3E');
+  }
+
+  :where(.radio, .checkbox):checked::after {
+    color: var(--input-border-color-focus);
+  }
+
+  :where(.select) {
+    background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" fill="rgb(94, 117, 131)" viewBox="0 0 24 24"><path d="M12.7 15.7a1 1 0 0 1-1.4 0l-6-6a1 1 0 0 1 1.4-1.4l5.3 5.29 5.3-5.3a1 1 0 1 1 1.4 1.42z"/></svg>');
+    background-position: calc(100% - var(--_input-padding-inline, 1em));
+    background-size: 1.5em;
+    background-repeat: no-repeat;
+  }
+
+  /* ============================================
+     INTERACTIVE STATES (All form controls)
+     ============================================ */
+
+  /* Hover state */
+  :is(.input, .select, .textarea, .radio, .checkbox):hover:not(
+      :focus-visible,
+      [disabled]
+    ) {
+    --_input-border-color: var(--input-border-color-hover);
+  }
+
+  /* Focus state */
+  :is(.input, .select, .textarea, .radio, .checkbox):focus-visible {
+    --_input-border-color: var(--input-border-color-focus);
+    outline-color: var(--_input-border-color);
+  }
+
+  /* ============================================
+     ERROR STATE (Text inputs only)
+     ============================================ */
+  /*:is(.input, .textarea) {
+    &:is([aria-invalid="true"]):not(:focus-visible) {
+      --_input-border-color: var(--input-border-color-error);
+      --_input-bg: var(--input-bg-error);
+      --_input-fg: var(--input-fg-error);
+    }
+
+    &:is([aria-invalid="true"]):hover:not(:focus-visible) {
+      --_input-border-color: var(--input-border-color-error);
+    }
+  }*/
+}

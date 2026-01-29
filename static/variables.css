@@ -1,0 +1,114 @@
+:root {
+  --base-root: 1rem; /* 1rem */
+  --spacing-6xl: calc(5 * var(--base-root));
+  --spacing-5xl: calc(4 * var(--base-root));
+  --spacing-4xl: calc(3.5 * var(--base-root));
+  --spacing-3xl: calc(3 * var(--base-root));
+  --spacing-2xl: calc(2.5 * var(--base-root));
+  --spacing-xl: calc(2 * var(--base-root));
+  --spacing-l: calc(1.5 * var(--base-root));
+  --spacing-m: calc(1 * var(--base-root));
+  --spacing-s: calc(0.75 * var(--base-root));
+  --spacing-xs: calc(0.5 * var(--base-root));
+  --spacing-2xs: calc(0.25 * var(--base-root));
+  --spacing-3xs: calc(0.125 * var(--base-root));
+}
+
+:root {
+  /* should be a generated scale instead */
+  --font-size-xs: 0.75rem;
+  --font-size-s: 0.875rem;
+  --font-size-base: 1rem;
+  --font-size-m: var(--font-size-base);
+  --font-size-l: 1.125rem;
+  --font-size-xl: 1.25rem;
+  --font-size-2xl: 1.5rem;
+  --font-size-3xl: 1.875rem;
+  --font-size-4xl: 2.25rem;
+}
+
+:root {
+  --easing: cubic-bezier(0.69, 0.63, 0.24, 0.99);
+}
+
+/* ============================================
+   SHARED SIZING (Inputs & Buttons)
+   ============================================ */
+:root {
+  --size-control-height-small: var(--spacing-xl);
+  --size-control-height-medium: var(--spacing-2xl);
+  --size-control-height-large: var(--spacing-3xl);
+}
+
+/* ============================================
+   SHARED VISUAL TOKENS
+   ============================================ */
+:root {
+  --border-width-base: 1px;
+  --border-radius-m: 0.25rem;
+  --border-radius-button: 0.5rem;
+
+  --transition-duration-gentle: 150ms;
+  --transition-easing-cubic: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ============================================
+   FOCUS RING
+   ============================================ */
+:root {
+  --color-focus-ring: var(--color-primary-1);
+}
+
+/* ============================================
+   BUTTON SEMANTIC TOKENS
+   ============================================ */
+:root {
+  /* Primary variant */
+  --color-background-button-primary-default: #4bd6bc;
+  --color-background-button-primary-hover: oklch(
+    from var(--color-background-button-primary-default) calc(l + 0.05) c h
+  );
+  --color-background-button-primary-active: oklch(
+    from var(--color-background-button-primary-default) calc(l - 0.05) c h
+  );
+  --color-foreground-button-primary-default: var(--color-neutral-3);
+
+  /* Secondary variant */
+  --color-background-button-secondary-default: #c7eaec;
+  --color-background-button-secondary-hover: oklch(
+    from var(--color-background-button-secondary-default) calc(l + 0.1) c h
+  );
+  --color-background-button-secondary-active: var(--color-secondary-3);
+  --color-foreground-button-secondary-default: var(--color-text-2);
+
+  /* Tertiary variant */
+  --color-background-button-tertiary-default: #e5edf0;
+  --color-background-button-tertiary-hover: color-mix(
+    in oklch,
+    var(--color-background-button-tertiary-default) 12%,
+    transparent
+  );
+  --color-background-button-tertiary-active: color-mix(
+    in oklch,
+    var(--color-background-button-tertiary-default) 20%,
+    transparent
+  );
+  --color-foreground-button-tertiary-default: black;
+}
+
+/* ============================================
+   INPUT SEMANTIC TOKENS
+   ============================================ */
+:root {
+  /* Colors - Border States */
+  --color-border-interactive-default: var(--palette-500);
+  --color-border-interactive-hover: var(--palette-650);
+  --color-border-interactive-active: var(--palette-600);
+  --color-border-interactive-error: var(--palette-500);
+
+  /* Colors - Background & Foreground */
+  --color-background-input-default: white;
+  --color-foreground-input-default: var(--color-text-2);
+  --color-background-input-error: var(--palette-50);
+  --color-foreground-input-error: var(--palette-800);
+}

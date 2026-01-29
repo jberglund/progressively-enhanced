@@ -1,0 +1,188 @@
+@layer buttons {
+  :root {
+    /* ===========================================
+       BUTTON COMPONENT TOKENS
+       Consuming semantic tokens from variables.css
+       =========================================== */
+
+    /* Primary variant */
+    --button-primary-bg-default: var(--color-background-button-primary-default);
+    --button-primary-bg-hover: var(--color-background-button-primary-hover);
+    --button-primary-bg-active: var(--color-background-button-primary-active);
+    --button-primary-fg: var(--color-foreground-button-primary-default);
+    --button-primary-border: transparent;
+
+    /* Secondary variant */
+    --button-secondary-bg-default: var(
+      --color-background-button-secondary-default
+    );
+    --button-secondary-bg-hover: var(--color-background-button-secondary-hover);
+    --button-secondary-bg-active: var(
+      --color-background-button-secondary-active
+    );
+    --button-secondary-fg: var(--color-foreground-button-secondary-default);
+    --button-secondary-border: transparent;
+
+    /* Tertiary variant */
+    --button-tertiary-bg-default: var(
+      --color-background-button-tertiary-default
+    );
+    --button-tertiary-bg-hover: var(--color-background-button-tertiary-hover);
+    --button-tertiary-bg-active: var(--color-background-button-tertiary-active);
+    --button-tertiary-fg: var(--color-foreground-button-tertiary-default);
+    --button-tertiary-border: transparent;
+
+    /* Typography */
+    --button-font-weight: 600;
+    --button-font-family: inherit;
+
+    /* Border */
+    --button-border-radius: var(--border-radius-button);
+    --button-border-width: var(--border-width-base, 1px);
+
+    /* Focus ring */
+    --button-focus-ring-offset: 0.125rem;
+    --button-focus-ring-width: 2px;
+    --button-focus-ring-color: var(--color-focus-ring);
+    --button-focus-ring-style: solid;
+
+    /* Transitions */
+    --button-transition-duration: 0.15s;
+    --button-transition-easing: cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* ===========================================
+     VARIANT DEFINITIONS
+     Sets up the intermediate variables per variant
+     =========================================== */
+
+  /* Default/Primary variant */
+  :where(.button) {
+    --_button-bg-default: var(--button-primary-bg-default);
+    --_button-bg-hover: var(--button-primary-bg-hover);
+    --_button-bg-active: var(--button-primary-bg-active);
+    --_button-fg: var(--button-primary-fg);
+    --_button-border: var(--button-primary-border);
+  }
+
+  /* Secondary variant */
+  :where(.button[data-variant="secondary"]) {
+    --_button-bg-default: var(--button-secondary-bg-default);
+    --_button-bg-hover: var(--button-secondary-bg-hover);
+    --_button-bg-active: var(--button-secondary-bg-active);
+    --_button-fg: var(--button-secondary-fg);
+    --_button-border: var(--button-secondary-border);
+  }
+
+  /* Tertiary variant */
+  :where(.button[data-variant="tertiary"]) {
+    --_button-bg-default: var(--button-tertiary-bg-default);
+    --_button-bg-hover: var(--button-tertiary-bg-hover);
+    --_button-bg-active: var(--button-tertiary-bg-active);
+    --_button-fg: var(--button-tertiary-fg);
+    --_button-border: var(--button-tertiary-border);
+  }
+
+  /* ===========================================
+     BASE BUTTON STYLES
+     =========================================== */
+  :where(.button) {
+    /* Resolve the current background (stateful) */
+    --_button-bg: var(--_button-bg-default);
+
+    /* Layout and typography */
+    display: inline-flex;
+    gap: var(--_button-gap);
+    justify-content: center;
+    align-items: center;
+
+    font-size: var(--_button-font-size);
+    font-weight: var(--button-font-weight);
+    font-family: var(--button-font-family);
+
+    /* Box model */
+    background: var(--_button-bg);
+    color: var(--_button-fg);
+    border: var(--button-border-width) solid var(--_button-border);
+    border-radius: var(--button-border-radius);
+    min-height: var(--_button-height);
+
+    padding-block: 0;
+    padding-inline: var(--_button-padding-inline);
+
+    text-align: center;
+    line-height: 1;
+
+    /* Focus ring */
+    outline-offset: var(--button-focus-ring-offset);
+    outline-width: var(--button-focus-ring-width);
+    outline-style: var(--button-focus-ring-style);
+    outline-color: transparent;
+
+    cursor: pointer;
+
+    transition:
+      outline var(--button-transition-duration) var(--button-transition-easing),
+      background-color var(--button-transition-duration)
+        var(--button-transition-easing),
+      transform var(--button-transition-duration)
+        var(--button-transition-easing);
+
+    /* Focus state */
+    &:focus-visible {
+      outline-color: var(--button-focus-ring-color);
+      z-index: 1;
+    }
+
+    /* Active press effect */
+    &:where(:active) {
+      transform: translateY(1px);
+      transform: scale(0.97);
+    }
+
+    /* Hover state (hover-capable devices only) */
+    @media (hover: hover) and (pointer: fine) {
+      &:where(:hover) {
+        --_button-bg: var(--_button-bg-hover);
+      }
+    }
+
+    /* Active state */
+    &:where(:active) {
+      --_button-bg: var(--_button-bg-active);
+    }
+
+    /* Focus ring offset normalization */
+    &:where(:not(:active)):focus-visible {
+      outline-offset: var(--button-focus-ring-offset);
+    }
+  }
+
+  /* ===========================================
+     SIZE VARIANTS
+     =========================================== */
+
+  /* Size: default (medium) */
+  :where(.button) {
+    --_button-height: var(--size-control-height-medium);
+    --_button-padding-inline: var(--spacing-m);
+    --_button-font-size: var(--font-size-m);
+    --_button-gap: var(--spacing-xs);
+  }
+
+  /* Size: small */
+  :where(.button[data-size="s"]) {
+    --_button-height: var(--size-control-height-small);
+    --_button-padding-inline: var(--spacing-s);
+    --_button-font-size: var(--font-size-s);
+    --_button-gap: var(--spacing-2xs);
+  }
+
+  /* Size: large */
+  :where(.button[data-size="l"]) {
+    --_button-height: var(--size-control-height-large);
+    --_button-padding-inline: var(--spacing-l);
+    --_button-font-size: var(--font-size-l);
+    --_button-gap: var(--spacing-xs);
+  }
+}

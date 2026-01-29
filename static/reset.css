@@ -1,0 +1,186 @@
+@layer {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+    background-repeat: no-repeat;
+  }
+
+  * {
+    padding: 0;
+    margin: 0;
+  }
+
+  html {
+    -webkit-text-size-adjust: none;
+    text-size-adjust: none;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    block-size: 100%;
+  }
+
+  body {
+    min-block-size: 100%;
+  }
+
+  img,
+  iframe,
+  audio,
+  video,
+  canvas {
+    display: block;
+    max-inline-size: 100%;
+    block-size: auto;
+  }
+
+  svg {
+    max-inline-size: 100%;
+  }
+
+  svg:not([fill]) {
+    fill: currentColor;
+  }
+
+  input,
+  button,
+  textarea,
+  select {
+    font: inherit;
+  }
+
+  textarea {
+    resize: vertical;
+  }
+
+  fieldset,
+  iframe {
+    border: none;
+  }
+
+  p,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    overflow-wrap: break-word;
+  }
+
+  p {
+    text-wrap: pretty;
+    font-variant-numeric: proportional-nums;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-variant-numeric: lining-nums;
+  }
+
+  p,
+  blockquote,
+  q,
+  figcaption,
+  li {
+    hanging-punctuation: first allow-end last;
+  }
+
+  input,
+  label,
+  button,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    line-height: 1.1;
+  }
+
+  math,
+  time,
+  table {
+    font-variant-numeric: tabular-nums lining-nums slashed-zero;
+  }
+
+  code {
+    font-variant-numeric: slashed-zero;
+  }
+
+  table {
+    border-collapse: collapse;
+  }
+
+  abbr {
+    font-variant-caps: all-small-caps;
+    text-decoration: none;
+
+    &[title] {
+      cursor: help;
+      text-decoration: underline dotted;
+    }
+  }
+
+  sup,
+  sub {
+    line-height: 0;
+  }
+
+  :disabled {
+    opacity: 0.8;
+    cursor: not-allowed;
+  }
+
+  :focus-visible {
+    outline-offset: 0.2rem;
+  }
+}
+
+@layer normalize {
+  :root {
+    color-scheme: light;
+  }
+
+  /*:where(*):focus-visible {
+    outline-width: var(--focus-ring-width, 1px);
+    outline-color: var(--focus-ring-color, var(--color-primary-1));
+    outline-style: var(--focus-ring-style, solid);
+    outline-offset: var(--focus-ring-offset, 0px);
+  }*/
+
+  :where(
+    button,
+    input[type="button"],
+    input[type="submit"],
+    input[type="reset"]
+  ) {
+    cursor: pointer;
+    touch-action: manipulation;
+    user-select: none;
+    text-decoration: none;
+    overflow: clip;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  :where(input, button, textarea, select) {
+    font: inherit;
+    font-feature-settings: inherit;
+    -webkit-appearance: none;
+    appearance: none;
+    color: inherit;
+    background-color: transparent;
+    border: none;
+  }
+  :where(b, strong, th) {
+    font-weight: 600;
+  }
+
+  :where(h1, h2, h3, h4, h5, h6) {
+    font-weight: 600;
+  }
+}

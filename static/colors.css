@@ -1,0 +1,214 @@
+:root {
+  /* Lightness scale: 99.5% → 20% across 19 steps */
+  --lightness-50: 99.5%;
+  --lightness-100: 97%;
+  --lightness-150: 94.5%;
+  --lightness-200: 91.5%;
+  --lightness-250: 88%;
+  --lightness-300: 84%;
+  --lightness-350: 79%;
+  --lightness-400: 73%;
+  --lightness-450: 66%;
+  --lightness-500: 58%;
+  --lightness-550: 50%;
+  --lightness-600: 44%;
+  --lightness-650: 39%;
+  --lightness-700: 35%;
+  --lightness-750: 31%;
+  --lightness-800: 27.5%;
+  --lightness-850: 24.5%;
+  --lightness-900: 22%;
+  --lightness-950: 20%;
+
+  /* Chroma scale: low at extremes, peak in mid-tones */
+  --chroma-50: 0.03;
+  --chroma-100: 0.06;
+  --chroma-150: 0.09;
+  --chroma-200: 0.14;
+  --chroma-250: 0.2;
+  --chroma-300: 0.28;
+  --chroma-350: 0.36;
+  --chroma-400: 0.42;
+  --chroma-450: 0.46;
+  --chroma-500: 0.48;
+  --chroma-550: 0.46;
+  --chroma-600: 0.42;
+  --chroma-650: 0.36;
+  --chroma-700: 0.3;
+  --chroma-750: 0.24;
+  --chroma-800: 0.18;
+  --chroma-850: 0.14;
+  --chroma-900: 0.1;
+  --chroma-950: 0.08;
+}
+
+[data-palette] {
+  /* Palette colors — resolve based on --origin-color in scope */
+  --palette-50: oklch(
+    from var(--origin-color) var(--lightness-50)
+      calc(sin(var(--chroma-50) * pi) * c) h
+  );
+  --palette-100: oklch(
+    from var(--origin-color) var(--lightness-100)
+      calc(sin(var(--chroma-100) * pi) * c) h
+  );
+  --palette-150: oklch(
+    from var(--origin-color) var(--lightness-150)
+      calc(sin(var(--chroma-150) * pi) * c) h
+  );
+  --palette-200: oklch(
+    from var(--origin-color) var(--lightness-200)
+      calc(sin(var(--chroma-200) * pi) * c) h
+  );
+  --palette-250: oklch(
+    from var(--origin-color) var(--lightness-250)
+      calc(sin(var(--chroma-250) * pi) * c) h
+  );
+  --palette-300: oklch(
+    from var(--origin-color) var(--lightness-300)
+      calc(sin(var(--chroma-300) * pi) * c) h
+  );
+  --palette-350: oklch(
+    from var(--origin-color) var(--lightness-350)
+      calc(sin(var(--chroma-350) * pi) * c) h
+  );
+  --palette-400: oklch(
+    from var(--origin-color) var(--lightness-400)
+      calc(sin(var(--chroma-400) * pi) * c) h
+  );
+  --palette-450: oklch(
+    from var(--origin-color) var(--lightness-450)
+      calc(sin(var(--chroma-450) * pi) * c) h
+  );
+  --palette-500: oklch(
+    from var(--origin-color) var(--lightness-500)
+      calc(sin(var(--chroma-500) * pi) * c) h
+  );
+  --palette-550: oklch(
+    from var(--origin-color) var(--lightness-550)
+      calc(sin(var(--chroma-550) * pi) * c) h
+  );
+  --palette-600: oklch(
+    from var(--origin-color) var(--lightness-600)
+      calc(sin(var(--chroma-600) * pi) * c) h
+  );
+  --palette-650: oklch(
+    from var(--origin-color) var(--lightness-650)
+      calc(sin(var(--chroma-650) * pi) * c) h
+  );
+  --palette-700: oklch(
+    from var(--origin-color) var(--lightness-700)
+      calc(sin(var(--chroma-700) * pi) * c) h
+  );
+  --palette-750: oklch(
+    from var(--origin-color) var(--lightness-750)
+      calc(sin(var(--chroma-750) * pi) * c) h
+  );
+  --palette-800: oklch(
+    from var(--origin-color) var(--lightness-800)
+      calc(sin(var(--chroma-800) * pi) * c) h
+  );
+  --palette-850: oklch(
+    from var(--origin-color) var(--lightness-850)
+      calc(sin(var(--chroma-850) * pi) * c) h
+  );
+  --palette-900: oklch(
+    from var(--origin-color) var(--lightness-900)
+      calc(sin(var(--chroma-900) * pi) * c) h
+  );
+  --palette-950: oklch(
+    from var(--origin-color) var(--lightness-950)
+      calc(sin(var(--chroma-950) * pi) * c) h
+  );
+}
+
+/* Palette origins */
+[data-palette="neutral"] {
+  --origin-color: #ccc;
+}
+
+[data-palette="accent"] {
+  --origin-color: rgb(75, 214, 188);
+  --origin-color: #00bbe4;
+}
+
+[data-palette="success"] {
+  --origin-color: oklch(50% 0.2 145);
+}
+
+[data-palette="error"],
+[aria-invalid="true"] {
+  --origin-color: oklch(50% 0.25 25);
+}
+
+/* Semantic layer — regular */
+[data-palette] {
+  --bg-subtle: var(--palette-50);
+  --bg-default: var(--palette-100);
+  --bg-strong: var(--palette-200);
+
+  --fg-subtle: var(--palette-500);
+  --fg-default: var(--palette-800);
+  --fg-strong: var(--palette-950);
+
+  --border-subtle: var(--palette-100);
+  --border-default: var(--palette-200);
+  --border-strong: var(--palette-350);
+}
+
+/* Semantic layer — inverted */
+[data-palette-inverted] {
+  --bg-subtle: var(--palette-950);
+  --bg-default: var(--palette-900);
+  --bg-strong: var(--palette-800);
+
+  --fg-subtle: var(--palette-500);
+  --fg-default: var(--palette-200);
+  --fg-strong: var(--palette-50);
+
+  --border-subtle: var(--palette-900);
+  --border-default: var(--palette-800);
+  --border-strong: var(--palette-650);
+}
+
+/* Utility classes — background */
+.bg-subtle {
+  background-color: var(--bg-subtle);
+}
+.bg-default {
+  background-color: var(--bg-default);
+}
+.bg-strong {
+  background-color: var(--bg-strong);
+}
+
+/* Utility classes — foreground */
+.fg-subtle {
+  color: var(--fg-subtle);
+}
+.fg-default {
+  color: var(--fg-default);
+}
+.fg-strong {
+  color: var(--fg-strong);
+}
+
+/* Utility classes — border */
+@property --border-color {
+  syntax: "<color>";
+  inherits: false;
+}
+
+.border {
+  border: 1px solid var(--border-color);
+}
+
+.bc-subtle {
+  --border-color: var(--border-subtle);
+}
+.bc-default {
+  --border-color: var(--border-default);
+}
+.bc-strong {
+  --border-color: var(--border-strong);
+}

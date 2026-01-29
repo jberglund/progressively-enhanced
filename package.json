@@ -1,0 +1,21 @@
+{
+  "name": "progressive-enhancement-fra-bunn",
+  "module": "index.ts",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "bun run --hot app/index.tsx"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "dependencies": {
+    "@hono/zod-validator": "^0.7.6",
+    "hono": "^4.10.3",
+    "typesafe-routes": "^12.3.0",
+    "zod": "^4.3.6"
+  }
+}
