@@ -1,0 +1,95 @@
+pe-popover {
+  position: fixed;
+  right: 1rem;
+  top: 1rem;
+  bottom: 1rem;
+  height: calc(100% - (1rem * 2));
+  left: unset;
+  z-index: 1000;
+  display: grid;
+  padding: 0.5rem;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 0.75rem;
+}
+
+pe-popover-content {
+  /*margin: 1rem;*/
+  min-width: 30rem;
+  background-color: white;
+  border: 1px solid #ccc;
+  display: block;
+  border-radius: 0.5rem;
+  padding-inline: 1rem;
+
+  display: grid;
+  grid-template-rows: max-content 1fr;
+}
+
+:where(pe-popover header) {
+  border-bottom: inherit;
+  margin-inline: -1rem;
+  padding: 0.5rem 1rem;
+}
+
+pe-outlet {
+  display: block;
+  overflow: scroll;
+}
+
+:where(pe-popover[popover]):popover-open {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+:where(pe-popover[popover]) {
+  /* reset */
+  border: none;
+  background-color: initial;
+
+  /* Final state of the exit animation */
+  opacity: 0;
+  transform: translateX(10%);
+
+  transition:
+    opacity 0.15s,
+    transform 0.15s,
+    overlay 0.15s allow-discrete,
+    display 0.15s allow-discrete;
+  /* Equivalent to
+  transition: all 0.7s allow-discrete; */
+}
+
+/* Needs to be after the previous [popover]:popover-open rule
+to take effect, as the specificity is the same */
+@starting-style {
+  :where(pe-popover[popover]):popover-open {
+    opacity: 0;
+    transform: translateX(10%);
+  }
+}
+
+/* Transition for the popover's backdrop */
+
+:where(pe-popover[popover])::backdrop {
+  background-color: transparent;
+  transition:
+    display 0.15s allow-discrete,
+    overlay 0.15s allow-discrete,
+    background-color 0.15s;
+  /* Equivalent to
+  transition: all 0.7s allow-discrete; */
+}
+
+:where(pe-popover[popover]):popover-open::backdrop {
+  background-color: rgb(222 222 222 / 50%);
+}
+
+/* The nesting selector (&) cannot represent pseudo-elements
+so this starting-style rule cannot be nested */
+
+@starting-style {
+  :where(pe-popover[popover]):popover-open::backdrop {
+    background-color: transparent;
+  }
+}

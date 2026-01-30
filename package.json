@@ -4,7 +4,8 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "dev": "bun run --hot app/index.tsx"
+    "dev": "bun run --hot app/index.tsx",
+    "dev:inspect": "bun --inspect app/index.tsx"
   },
   "devDependencies": {
     "@types/bun": "latest"

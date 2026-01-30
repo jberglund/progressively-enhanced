@@ -25,7 +25,11 @@ export const fullRenderer = jsxRenderer(
             <h1 style="font-size: 1rem;">Progressive Enhancement</h1>
             <nav>
               <flex-stack horizontal gap="s">
-                <a class="nav-item link" href={renderPath(routes.example, {})}>
+                <a
+                  class="nav-item link"
+                  href={renderPath(routes.example, {})}
+                  pe-layer="new drawer"
+                >
                   Validation
                 </a>
                 <a

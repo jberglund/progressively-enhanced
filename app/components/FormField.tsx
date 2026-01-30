@@ -20,29 +20,31 @@ export const FormField = ({
   const hasErrors = errors && errors.length > 0;
 
   return (
-    <flex-stack gap="2xs" up-form-group data-palette="error">
-      <label for={inputId}>{label}</label>
-      <input
-        class="input"
-        type={type}
-        id={inputId}
-        name={name}
-        value={value}
-        autocomplete="off"
-        aria-describedby={hasErrors ? errorId : undefined}
-        aria-invalid={hasErrors ? "true" : undefined}
-        {...(validate ? { "up-validate": true } : {})}
-      />
-      {hasErrors && (
-        <div
-          data-palette="error"
-          id={errorId}
-          class="text-s fg-subtle"
-          role="alert"
-        >
-          {errors.join(", ")}
-        </div>
-      )}
-    </flex-stack>
+    <fieldset enhance-form-group>
+      <flex-stack gap="2xs" up-form-group data-palette="error">
+        <label for={inputId}>{label}</label>
+        <input
+          class="input"
+          type={type}
+          id={inputId}
+          name={name}
+          value={value}
+          autocomplete="off"
+          aria-describedby={hasErrors ? errorId : undefined}
+          aria-invalid={hasErrors ? "true" : undefined}
+          {...(validate ? { "enhance-validate": true } : {})}
+        />
+        {hasErrors && (
+          <div
+            data-palette="error"
+            id={errorId}
+            class="text-s fg-subtle"
+            role="alert"
+          >
+            {errors.join(", ")}
+          </div>
+        )}
+      </flex-stack>
+    </fieldset>
   );
 };

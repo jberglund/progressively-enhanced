@@ -1,3 +1,22 @@
+const layerTemplateElement = document.createElement("template");
+
+layerTemplateElement.innerHTML = /*html*/ `
+    <pe-popover popover="auto">
+      <pe-popover-content>
+        <header>
+          <button class="button" data-size="s" data-variant="tertiary" pe-dismiss>⇠ Close</button>
+        </header>
+        <pe-outlet></pe-outlet>
+      </pe-popover-content>
+    </pe-popover>
+`;
+
+layerTemplateElement.id = "layer-template";
+
+if (!document.getElementById(layerTemplateElement.id)) {
+  document.body.appendChild(layerTemplateElement);
+}
+
 /**
  * LayerManager
  *
@@ -13,64 +32,91 @@ export class LayerManager {
    * Reuses existing popover element if present.
    */
   create(mode: "dialog" | "drawer", html: string): void {
-    // Get or create the popover element
-    let popover = document.querySelector<HTMLElement>(".pe-layer");
+    // Clone from template
+    const template = this.template as HTMLTemplateElement;
+    if (!template) {
+      throw new Error("Layer template not found");
+    }
+
+    const fragment = template.content.cloneNode(true) as DocumentFragment;
+    const popover = fragment.querySelector<HTMLElement>("pe-popover");
 
     if (!popover) {
-      popover = document.createElement("div");
-      popover.setAttribute("popover", "manual");
-      popover.className = "pe-layer";
+      throw new Error("Popover element not found in template");
     }
 
-    // Clear any existing mode classes
-    popover.classList.remove("pe-layer--dialog", "pe-layer--drawer");
+    popover.setAttribute("mode", mode);
 
-    // Add mode-specific class
-    popover.classList.add(`pe-layer--${mode}`);
-
-    // Set content
-    popover.innerHTML = html;
-
-    // Append to body if not already in DOM
-    if (!popover.parentElement) {
-      document.body.appendChild(popover);
+    const outlet = popover.querySelector("pe-outlet");
+    if (outlet) {
+      outlet.setHTMLUnsafe(html);
     }
 
-    // Show the popover
+    popover.addEventListener("toggle", (e) => {
+      if (e.newState === "closed") {
+        this.removeAfterAnimation(popover);
+      }
+    });
+
+    document.body.appendChild(popover);
+
     popover.showPopover();
 
-    // Store references
     this.currentLayer = popover;
     this.mode = mode;
   }
 
-  /**
-   * Closes and cleans up the current layer.
-   */
+  private removeAfterAnimation(popover: HTMLElement) {
+    const style = getComputedStyle(popover);
+
+    // Check for animation
+    const hasAnimation =
+      style.animationName !== "none" && style.animationName !== "";
+
+    // Check for transition
+    const hasTransition =
+      style.transitionDuration !== "0s" && style.transitionProperty !== "none";
+
+    if (hasAnimation) {
+      popover.addEventListener(
+        "animationend",
+        () => {
+          popover.remove();
+        },
+        { once: true },
+      );
+    } else if (hasTransition) {
+      popover.addEventListener(
+        "transitionend",
+        () => {
+          popover.remove();
+        },
+        { once: true },
+      );
+    } else {
+      // No animation or transition - remove immediately
+      popover.remove();
+    }
+  }
+
+  get template() {
+    return document.getElementById(layerTemplateElement.id);
+  }
+
   close(): void {
     if (this.currentLayer) {
-      // Hide the popover
+      // this will remove the popover because of removeAfterAnimation
       this.currentLayer.hidePopover();
 
-      // Clean up: remove from DOM
-      this.currentLayer.remove();
-
-      // Clear references
       this.currentLayer = null;
       this.mode = null;
     }
   }
 
-  /**
-   * Checks if a layer is currently open.
-   */
   isOpen(): boolean {
     return this.currentLayer !== null;
   }
 
-  /**
-   * Gets the current layer element.
-   */
   getCurrentLayer(): HTMLElement | null {
     return this.currentLayer;
   }

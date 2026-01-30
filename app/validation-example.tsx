@@ -39,48 +39,50 @@ const ExampleForm = ({
   formError?: string;
 }) => {
   return (
-    <form
-      method="post"
-      action={template(routes.example)}
-      style="max-width: 600px"
-      class="mx-auto my-3xl"
-    >
-      <flex-stack gap="m">
-        <FormField
-          label="Name"
-          name="name"
-          value={data?.name}
-          errors={errors?.fieldErrors.name}
-          validate
-        />
+    <enhance-form target=".success">
+      <form
+        method="post"
+        action={template(routes.example)}
+        style="max-width: 600px"
+        class="mx-auto my-3xl"
+      >
+        <flex-stack gap="m">
+          <FormField
+            label="Name"
+            name="name"
+            value={data?.name}
+            errors={errors?.fieldErrors.name}
+            validate={true}
+          />
 
-        <FormField
-          label="Age"
-          name="age"
-          value={data?.age}
-          errors={errors?.fieldErrors.age}
-          validate
-        />
+          <FormField
+            label="Age"
+            name="age"
+            value={data?.age}
+            errors={errors?.fieldErrors.age}
+            validate={true}
+          />
 
-        <CheckboxGroup
-          legend="Favorite foods"
-          name="favoriteFoods"
-          options={foodOptions}
-          selectedValues={data?.favoriteFoods}
-          errors={errors?.fieldErrors.favoriteFoods}
-        />
+          <CheckboxGroup
+            legend="Favorite foods"
+            name="favoriteFoods"
+            options={foodOptions}
+            selectedValues={data?.favoriteFoods}
+            errors={errors?.fieldErrors.favoriteFoods}
+          />
 
-        {formError && (
-          <div role="alert" class="form-error">
-            {formError}
-          </div>
-        )}
+          {formError && (
+            <div role="alert" class="form-error">
+              {formError}
+            </div>
+          )}
 
-        <button class="button" type="submit">
-          Submit
-        </button>
-      </flex-stack>
-    </form>
+          <button class="button" type="submit">
+            Submit
+          </button>
+        </flex-stack>
+      </form>
+    </enhance-form>
   );
 };
 
@@ -94,7 +96,7 @@ const SuccessPage = ({
   favoriteFoods: string[];
 }) => {
   return (
-    <flex-stack gap="l">
+    <flex-stack gap="l" class="success">
       <flex-stack gap="s">
         <h1 class="text-2xl text-bold">Submitted!</h1>
         <p class="text-l">Thanks for your submission, {name}.</p>
