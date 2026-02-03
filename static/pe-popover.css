@@ -35,6 +35,9 @@ pe-popover-content {
 pe-outlet {
   display: block;
   overflow: scroll;
+  padding-inline: 1rem;
+  padding-block: 3rem;
+  height: 100%;
 }
 
 :where(pe-popover[popover]):popover-open {

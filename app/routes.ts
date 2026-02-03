@@ -21,4 +21,7 @@ export const routes = createRoutes({
   colors: {
     path: ["colors"],
   },
+  popover: {
+    path: ["popover"],
+  },
 });

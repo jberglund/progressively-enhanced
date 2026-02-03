@@ -161,7 +161,6 @@ function SearchForm({
           </select>
         </flex-stack>
         <flex-stack gap="2xs">
-          <span class="text-s text-bold fg-default">Sort by</span>
           <button
             class="button"
             data-variant="tertiary"
@@ -169,7 +168,7 @@ function SearchForm({
             popovertargetaction="toggle"
             type="button"
           >
-            Sort by
+            Sort by: {currentSort || "rank"}
           </button>
           <div
             class="popover-filter br-xs mb-3xs p-xs px-m bg-default box-shadow-m border bc-default"

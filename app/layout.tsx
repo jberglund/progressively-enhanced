@@ -44,6 +44,9 @@ export const fullRenderer = jsxRenderer(
                 <a class="nav-item link" href={renderPath(routes.colors, {})}>
                   Colors
                 </a>
+                <a class="nav-item link" href={renderPath(routes.popover, {})}>
+                  Popover
+                </a>
               </flex-stack>
             </nav>
           </flex-stack>

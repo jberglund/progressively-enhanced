@@ -1,5 +1,4 @@
 import { LayerManager } from "./manager";
-import { loadContent } from "./loader";
 import "./enhance-form";
 import { initLinkInterceptor } from "./link-interceptor";
 

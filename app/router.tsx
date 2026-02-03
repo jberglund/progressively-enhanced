@@ -6,6 +6,7 @@ import { exampleHandlers, exampleSuccessHandler } from "./validation-example";
 import { booksHandlers } from "./books";
 import { ComponentsTest } from "./components-test";
 import { ColorsTest } from "./colors-test";
+import { PopoverPage } from "./popover";
 
 export const router = new Hono();
 
@@ -39,4 +40,8 @@ router.get(template(routes.test), (c) => {
 
 router.get(template(routes.colors), (c) => {
   return c.render(<ColorsTest />);
+});
+
+router.get(template(routes.popover), (c) => {
+  return c.render(<PopoverPage />);
 });

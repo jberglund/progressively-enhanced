@@ -53,6 +53,7 @@ const ExampleForm = ({
             value={data?.name}
             errors={errors?.fieldErrors.name}
             validate={true}
+            autofocus
           />
 
           <FormField
