@@ -33,6 +33,9 @@
     block-size: auto;
   }
 
+  label {
+    display: block;
+  }
   svg {
     max-inline-size: 100%;
   }

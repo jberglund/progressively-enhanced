@@ -10,11 +10,11 @@ export const fullRenderer = jsxRenderer(
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="stylesheet" href="/static/styles.css" />
-        <Style>{css`
+        {/*<Style>{css`
           @view-transition {
             navigation: auto;
           }
-        `}</Style>
+        `}</Style>*/}
         <script src="/static/main.js" async />
         <script src="/client/index.ts" type="module" />
       </head>
@@ -25,14 +25,14 @@ export const fullRenderer = jsxRenderer(
             <h1 style="font-size: 1rem;">Progressive Enhancement</h1>
             <nav>
               <flex-stack horizontal gap="s">
-                <a
+                {/*<a
                   class="nav-item link"
                   href={renderPath(routes.example, {})}
                   pe-layer="new drawer"
                 >
                   Validation
-                </a>
-                <a
+                </a>*/}
+                {/*<a
                   class="nav-item link"
                   href={renderPath(routes.books, { name: "10" })}
                 >
@@ -46,7 +46,7 @@ export const fullRenderer = jsxRenderer(
                 </a>
                 <a class="nav-item link" href={renderPath(routes.popover, {})}>
                   Popover
-                </a>
+                </a>*/}
               </flex-stack>
             </nav>
           </flex-stack>

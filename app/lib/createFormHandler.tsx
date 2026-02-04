@@ -17,6 +17,12 @@ export const isInlineValidation = (c: Context) =>
  */
 type OnSubmitResult = { redirect: string } | { error: string } | Response;
 
+export type FormProps<TSchema extends z.ZodType> = {
+  data?: z.infer<TSchema>;
+  errors?: z.ZodFlattenedError<z.infer<TSchema>>;
+  formError?: string;
+};
+
 /**
  * Configuration for creating a form handler
  */
@@ -24,11 +30,7 @@ type FormHandlerConfig<TSchema extends z.ZodType> = {
   /** Zod schema for form validation */
   schema: TSchema;
   /** Form component to render */
-  form: FC<{
-    data?: Partial<z.infer<TSchema>>;
-    errors?: z.ZodFlattenedError<z.infer<TSchema>>;
-    formError?: string;
-  }>;
+  form: FC<FormProps<TSchema>>;
   /**
    * Async callback called after validation passes (and not inline validation).
    * Use this for API calls, database operations, etc.
@@ -76,6 +78,7 @@ export function createPostHandler<TSchema extends z.ZodType>({
   return zValidator("form", schema, async (result, c) => {
     // Validation failed - render form with field errors
     if (!result.success) {
+      console.log(c.req.formData);
       const errors = z.flattenError(result.error);
       c.status(422);
       return c.render(<Form data={result.data} errors={errors} />);

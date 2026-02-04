@@ -3,10 +3,11 @@ import { fragmentRenderer, fullRenderer } from "./layout";
 import { routes } from "./routes";
 import { template } from "typesafe-routes";
 import { exampleHandlers, exampleSuccessHandler } from "./validation-example";
-import { booksHandlers } from "./books";
-import { ComponentsTest } from "./components-test";
-import { ColorsTest } from "./colors-test";
-import { PopoverPage } from "./popover";
+import simpleForm from "./forms/1-a-simple-form";
+import validationForm from "./forms/2-a-validation-form";
+import enhancingForm from "./forms/3-href-eller-action";
+import seriousForm from "./forms/4-a-serious-form";
+import reservationForm from "./forms/05-reservation";
 
 export const router = new Hono();
 
@@ -27,21 +28,8 @@ router.get(template(routes.example), exampleHandlers.get);
 router.post(template(routes.example), exampleHandlers.post);
 router.get(template(routes.example.success), exampleSuccessHandler);
 
-// Books routes
-router.get(template(routes.books), booksHandlers.get);
-router.get(template(routes.books.book), (c) => {
-  const slug = c.req.param("slug");
-  return c.render(<div>Book: {slug}</div>);
-});
-
-router.get(template(routes.test), (c) => {
-  return c.render(<ComponentsTest />);
-});
-
-router.get(template(routes.colors), (c) => {
-  return c.render(<ColorsTest />);
-});
-
-router.get(template(routes.popover), (c) => {
-  return c.render(<PopoverPage />);
-});
+router.route("/", simpleForm);
+router.route("/", validationForm);
+router.route("/", enhancingForm);
+router.route("/", seriousForm);
+router.route("/", reservationForm);

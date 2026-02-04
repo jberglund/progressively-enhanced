@@ -89,7 +89,7 @@ class EnhanceForm extends HTMLElement {
     this.controllers.get(target.name)?.abort("Aborted by user");
     this.controllers.set(target.name, new AbortController());
     const signal = this.controllers.get(target.name)?.signal;
-    const groupSelector = `[enhance-form-group]:has([name="${target.name}"])`;
+    const groupSelector = `:is([enhance-form-group], fieldset):has([name="${target.name}"])`;
 
     try {
       const headers = addHeader(EnhancedHeader.Validate, target.name);
@@ -99,7 +99,7 @@ class EnhanceForm extends HTMLElement {
 
       const newFormGroup = this.replaceElements(html, groupSelector);
       const newValidateInput = newFormGroup?.querySelector<HTMLInputElement>(
-        "input[enhance-validate]",
+        ":is(input, textarea)[enhance-validate]",
       );
 
       if (newValidateInput) {
@@ -196,7 +196,7 @@ class EnhanceForm extends HTMLElement {
    */
   private focusFirstInvalidInput() {
     const firstInvalidInput = this._form.querySelector<HTMLInputElement>(
-      'input[aria-invalid="true"]',
+      ':is(input, textarea)[aria-invalid="true"]',
     );
 
     if (!firstInvalidInput) return;
@@ -291,7 +291,7 @@ class EnhanceForm extends HTMLElement {
     });
 
     const inputs = this._form.querySelectorAll<HTMLInputElement>(
-      "input[enhance-validate]",
+      ":is(input, textarea)[enhance-validate]",
     );
 
     inputs.forEach((input) => input.addEventListener("blur", blurHandler));
