@@ -1,37 +1,36 @@
 import type { JSX } from "hono/jsx";
 import { FieldWrapper } from "./FieldWrapper";
 
-type FormFieldProps = JSX.IntrinsicElements["input"] & {
-  name: string;
+type FormTextareaProps = JSX.IntrinsicElements["textarea"] & {
   label: string;
+  name: string;
   errors?: string[];
-  validate?: boolean;
 };
 
-export function FormField({
+export function FormTextarea({
   label,
   name,
   id,
   errors,
-  validate = false,
+  children,
   ...rest
-}: FormFieldProps) {
+}: FormTextareaProps) {
   const inputId = id ?? name;
   const errorId = `${inputId}-error`;
   const hasErrors = errors && errors.length > 0;
 
   return (
     <FieldWrapper label={label} name={name} id={id} errors={errors}>
-      <input
-        class="input"
+      <textarea
+        class="textarea"
         id={inputId}
         name={name}
-        autocomplete="off"
         aria-describedby={hasErrors ? errorId : undefined}
         aria-invalid={hasErrors ? "true" : undefined}
-        {...(validate ? { "enhance-validate": true } : {})}
         {...rest}
-      />
+      >
+        {children}
+      </textarea>
     </FieldWrapper>
   );
 }

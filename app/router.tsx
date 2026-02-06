@@ -3,11 +3,14 @@ import { fragmentRenderer, fullRenderer } from "./layout";
 import { routes } from "./routes";
 import { template } from "typesafe-routes";
 import { exampleHandlers, exampleSuccessHandler } from "./validation-example";
+import requests from "./forms/0-requests";
 import simpleForm from "./forms/1-a-simple-form";
 import validationForm from "./forms/2-a-validation-form";
-import enhancingForm from "./forms/3-href-eller-action";
-import seriousForm from "./forms/4-a-serious-form";
-import reservationForm from "./forms/05-reservation";
+import seriousForm from "./forms/3-a-serious-form";
+import reservationForm from "./forms/9-reservation";
+import customersApp from "./customers";
+import appointmentsApp from "./appointments";
+import popoverDemo from "./forms/4-forms-everywhere";
 
 export const router = new Hono();
 
@@ -28,8 +31,11 @@ router.get(template(routes.example), exampleHandlers.get);
 router.post(template(routes.example), exampleHandlers.post);
 router.get(template(routes.example.success), exampleSuccessHandler);
 
+router.route("/", requests);
 router.route("/", simpleForm);
 router.route("/", validationForm);
-router.route("/", enhancingForm);
 router.route("/", seriousForm);
 router.route("/", reservationForm);
+router.route("/", customersApp);
+router.route("/", appointmentsApp);
+router.route("/", popoverDemo);

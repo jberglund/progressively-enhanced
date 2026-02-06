@@ -7,10 +7,7 @@ import { Hono } from "hono";
   FormData är gratis serialisering.
   Formdata.get() och name=""
 
-  Visa i devtools
-
-  FormData and Get: not body
-  Major icks.
+  FormData and GET
 
 */
 export const path = "/form";
@@ -38,12 +35,12 @@ app.get("/success", (c: Context) => c.render(<Success />));
 
 export function SimpleForm({ error }: { error?: string }) {
   return (
-    <form method="post" action={"/form"}>
+    <form class="premade-form" method="post" action={path}>
       <fieldset>
-        <label for="name">Navn</label>
+        <label for="name">Name</label>
         <input class="input" type="text" id="name" name="firstname" />
+        {error && <p style="color: red;">{error}</p>}
       </fieldset>
-      {error && <p style="color: red;">{error}</p>}
       <button class="button" type="submit">
         Submit
       </button>
@@ -56,7 +53,7 @@ function Success() {
     <div>
       <h1>Hurra! 🥳</h1>
       <p>Skjema ble sendt – alle er glade!</p>
-      <a href="/form">Tilbake til skjema</a>
+      <a href={path}>Tilbake til skjema</a>
     </div>
   );
 }

@@ -4,10 +4,10 @@ import type { Context } from "hono";
 import type { FC } from "hono/jsx";
 
 /**
- * Checks if the request is an Unpoly inline validation request
+ * Checks if the request is an inline validation request (Unpoly or x-enhance)
  */
 export const isInlineValidation = (c: Context) =>
-  !!c.req.header("X-Up-Validate");
+  !!c.req.header("X-Up-Validate") || !!c.req.header("X-Enhance-Validate");
 
 /**
  * Result of the onSubmit callback

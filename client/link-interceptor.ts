@@ -54,7 +54,7 @@ export function initLinkInterceptor(layerManager: LayerManager): void {
     // Check for pe-dismiss attribute
     const dismissButton = target.closest<HTMLElement>("[pe-dismiss]");
 
-    if (dismissButton) {
+    if (dismissButton && layerManager.getCurrentLayer()) {
       event.preventDefault();
       layerManager.close();
     }

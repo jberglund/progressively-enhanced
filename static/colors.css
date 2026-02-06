@@ -1,26 +1,28 @@
 :root {
-  /* Lightness scale: 99.5% → 20% across 19 steps */
-  --lightness-50: 99.5%;
-  --lightness-100: 97%;
-  --lightness-150: 94.5%;
-  --lightness-200: 91.5%;
-  --lightness-250: 88%;
+  /* Lightness scale: 100% → 20% across 20 steps */
+  --lightness-0: 99.7%;
+  --lightness-50: 99%;
+  --lightness-100: 98%;
+  --lightness-150: 96%;
+  --lightness-200: 93%;
+  --lightness-250: 89%;
   --lightness-300: 84%;
-  --lightness-350: 79%;
-  --lightness-400: 73%;
-  --lightness-450: 66%;
-  --lightness-500: 58%;
-  --lightness-550: 50%;
-  --lightness-600: 44%;
-  --lightness-650: 39%;
-  --lightness-700: 35%;
-  --lightness-750: 31%;
-  --lightness-800: 27.5%;
-  --lightness-850: 24.5%;
-  --lightness-900: 22%;
+  --lightness-350: 78%;
+  --lightness-400: 71%;
+  --lightness-450: 63%;
+  --lightness-500: 55%;
+  --lightness-550: 48%;
+  --lightness-600: 42%;
+  --lightness-650: 37%;
+  --lightness-700: 33%;
+  --lightness-750: 29%;
+  --lightness-800: 26%;
+  --lightness-850: 23.5%;
+  --lightness-900: 21.5%;
   --lightness-950: 20%;
 
   /* Chroma scale: low at extremes, peak in mid-tones */
+  --chroma-0: 0.01;
   --chroma-50: 0.03;
   --chroma-100: 0.06;
   --chroma-150: 0.09;
@@ -44,6 +46,10 @@
 
 [data-palette] {
   /* Palette colors — resolve based on --origin-color in scope */
+  --palette-0: oklch(
+    from var(--origin-color) var(--lightness-0)
+      calc(sin(var(--chroma-0) * pi) * c) h
+  );
   --palette-50: oklch(
     from var(--origin-color) var(--lightness-50)
       calc(sin(var(--chroma-50) * pi) * c) h

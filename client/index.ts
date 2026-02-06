@@ -1,9 +1,8 @@
 import "./enhance-form";
 import "./crude-enhance-form";
-// import { LayerManager } from "./manager";
-// import { initLinkInterceptor } from "./link-interceptor";
+import { LayerManager } from "./manager";
+import { initLinkInterceptor } from "./link-interceptor";
 
-// const lm = new LayerManager();
-//lm.create("dialog", content);
+const lm = new LayerManager();
 
-// initLinkInterceptor(lm);
+initLinkInterceptor(lm);

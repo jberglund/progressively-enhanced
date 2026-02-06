@@ -21,6 +21,7 @@ pe-popover-content {
   display: block;
   border-radius: 0.5rem;
   padding-inline: 1rem;
+  padding-block: 1rem;
 
   display: grid;
   grid-template-rows: max-content 1fr;

@@ -8,6 +8,7 @@
     "dev:inspect": "bun --inspect app/index.tsx"
   },
   "devDependencies": {
+    "@faker-js/faker": "^10.2.0",
     "@types/bun": "latest"
   },
   "peerDependencies": {

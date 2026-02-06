@@ -27,7 +27,7 @@ export const reservationSchema = z
 export const path = "/reservation";
 const app = new Hono().basePath(path);
 
-function Form({
+export function ReservationForm({
   data,
   errors,
   formError,
@@ -35,7 +35,7 @@ function Form({
   console.log(errors);
   return (
     <enhance-form target="main">
-      <form method="post" action={path}>
+      <form class="premade-form" method="post" action={path}>
         <flex-stack gap="m">
           {formError && <p style="color: red;">{formError}</p>}
 
@@ -140,7 +140,7 @@ function Form({
 
 const { get, post } = createFormHandlers({
   schema: reservationSchema,
-  form: Form,
+  form: ReservationForm,
   onSubmit: async (data, c) => {
     return c.redirect("/reservation/success");
   },

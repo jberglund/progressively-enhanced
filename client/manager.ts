@@ -3,9 +3,6 @@ const layerTemplateElement = document.createElement("template");
 layerTemplateElement.innerHTML = /*html*/ `
     <pe-popover popover="auto" id="lol">
       <pe-popover-content>
-        <header>
-          <button class="button" data-size="s" data-variant="tertiary" popovertarget="lol" popovertargetaction="hide" >⇠ Close</button>
-        </header>
         <pe-outlet></pe-outlet>
       </pe-popover-content>
     </pe-popover>

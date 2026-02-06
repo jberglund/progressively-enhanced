@@ -1,14 +1,14 @@
-// This form should kick up the complexity a little, but with serious gains.
-// - We want to close the loop. Meaning, we want to keep user input when validation fails.
-// - We want to validate using zod
-// We should return the value being sent in so that we're not reseting
-
 import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
 import { z } from "zod";
 
 export const path = "/a-validation-form";
 const app = new Hono().basePath(path);
+
+/*
+  FormData + Valideringsbibliotek
+  Vi vill "sluta loopen". Inte reset vid varje request.
+*/
 
 export const contactSchema = z.object({
   fullName: z
@@ -21,7 +21,6 @@ export const contactSchema = z.object({
 type FormData = z.infer<typeof contactSchema>;
 type FormErrors = z.ZodFlattenedError<FormData>;
 
-// hono har en helper function för
 app.post(
   "/",
   zValidator("form", contactSchema, async (result, c) => {
@@ -49,8 +48,8 @@ export function ValidationForm({
   errors?: FormErrors;
 }) {
   return (
-    <enhance-form>
-      <form method="post" action={path}>
+    <crude-enhance-form>
+      <form method="post" action={path} class="premade-form">
         <fieldset>
           <label for="fullName">Full Name</label>
           <input
@@ -68,7 +67,7 @@ export function ValidationForm({
           Send
         </button>
       </form>
-    </enhance-form>
+    </crude-enhance-form>
   );
 }
 

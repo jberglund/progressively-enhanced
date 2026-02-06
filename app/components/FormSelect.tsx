@@ -1,37 +1,37 @@
-import type { JSX } from "hono/jsx";
+import type { Child } from "hono/jsx";
+import type { JSX } from "hono/jsx/jsx-runtime";
 import { FieldWrapper } from "./FieldWrapper";
 
-type FormFieldProps = JSX.IntrinsicElements["input"] & {
-  name: string;
+type FormSelectProps = {
   label: string;
   errors?: string[];
-  validate?: boolean;
-};
+  children: Child;
+} & JSX.IntrinsicElements["select"];
 
-export function FormField({
+export function FormSelect({
   label,
-  name,
-  id,
   errors,
-  validate = false,
+  children,
+  id,
+  name,
   ...rest
-}: FormFieldProps) {
+}: FormSelectProps) {
   const inputId = id ?? name;
   const errorId = `${inputId}-error`;
   const hasErrors = errors && errors.length > 0;
 
   return (
-    <FieldWrapper label={label} name={name} id={id} errors={errors}>
-      <input
-        class="input"
+    <FieldWrapper label={label} name={name ?? ""} id={inputId} errors={errors}>
+      <select
+        class="select"
         id={inputId}
         name={name}
-        autocomplete="off"
         aria-describedby={hasErrors ? errorId : undefined}
         aria-invalid={hasErrors ? "true" : undefined}
-        {...(validate ? { "enhance-validate": true } : {})}
         {...rest}
-      />
+      >
+        {children}
+      </select>
     </FieldWrapper>
   );
 }

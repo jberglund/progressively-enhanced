@@ -1,11 +1,14 @@
 // ---
-//
-// Web components är ett stort tema, så vi må skippa en hel del detaljer
-//
-// Javascript är vanligtvis globalt, men ett custom element binder det till ett HTML element.
-//
-// `this` betyder alltså själva elementet. så `<enhance-form>` är `this`.
-// Det är värt att prata om connectedCallback.
+/*
+  Web components är ett stort tema
+
+  Javascript är vanligtvis globalt, men ett custom element binder det till ett HTML element.
+
+  `this` betyder alltså själva elementet. så `<crude-enhance-form>` är `this`.
+
+  Vi kommer se varför connectedCallback är viktigt senare, men förklara nu.
+
+*/
 
 const parser = new DOMParser();
 

@@ -1,20 +1,31 @@
 import { Hono } from "hono";
 
-const app = new Hono();
+const app = new Hono().basePath("/requests");
 
 /*
-  I sin enklaste form på en server.
-
+  - FormData
+  - Post Resubmission
+  - PRG
+  - Location Header
+  - curl
 */
 
-app.get("/requests", (c) => {
-  return c.render(<div>I'm a GET 🐐</div>);
+app.get("/", (c) => {
+  return c.render(
+    <div>
+      <h1>I'm a GET 🐐</h1>
+    </div>,
+  );
 });
 
-app.post("/requests", (c) => {
+app.post("/", (c) => {
   return c.render(<div>I'm a POST ✉️</div>);
 });
 
-app.on(["GET", "POST"], "/post", (c) => c.text("i am bof"));
-
 export default app;
+
+/*
+  curl -X POST \
+    -d "name=back-in-the-ssr" \
+    http://localhost:1337/requests | tidy -indent -quiet
+*/

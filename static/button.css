@@ -113,6 +113,8 @@
     text-align: center;
     line-height: 1;
 
+    text-decoration: none;
+
     /* Focus ring */
     outline-offset: var(--button-focus-ring-offset);
     outline-width: var(--button-focus-ring-width);

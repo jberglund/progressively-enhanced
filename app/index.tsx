@@ -5,10 +5,14 @@ import { router } from "./router";
 const app = new Hono();
 
 // Handle TypeScript files with Bun's transpiler
-app.get("/client/*.ts", async (c) => {
+
+app.use("/static/*", serveStatic({ root: "./" }));
+app.route("/", router);
+
+app.get("/client/index.ts", async (c) => {
   const filepath = `.${c.req.path}`;
   const file = Bun.file(filepath);
-
+  console.log(file);
   if (!(await file.exists())) {
     return c.notFound();
   }
@@ -24,9 +28,6 @@ app.get("/client/*.ts", async (c) => {
     "Content-Type": "application/javascript; charset=utf-8",
   });
 });
-
-app.use("/static/*", serveStatic({ root: "./" }));
-app.route("/", router);
 
 export default {
   port: 1337,
