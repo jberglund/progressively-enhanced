@@ -1,12 +1,12 @@
 import { loadContent } from "./loader";
-import type { LayerManager } from "./manager";
+import { layerManager } from "./manager";
 
 /**
  * LinkInterceptor
  *
  * Intercepts clicks on [pe-layer] links and orchestrates layer opening.
  */
-export function initLinkInterceptor(layerManager: LayerManager): void {
+export function initLinkInterceptor(): void {
   document.addEventListener("click", async (event) => {
     const target = event.target as HTMLElement;
 
@@ -40,21 +40,22 @@ export function initLinkInterceptor(layerManager: LayerManager): void {
       // Load content and create layer
       try {
         const html = await loadContent(href, peTarget);
-        layerManager.create(mode, html);
+        layerManager.create({ href: href, mode, html });
       } catch (error) {
         console.error("Failed to load layer content:", error);
         // Optionally show error in layer
-        layerManager.create(
-          mode,
-          `<div class="pe-layer__error">Failed to load content</div>`,
-        );
+        layerManager.create({
+          href: href,
+          mode: mode,
+          html: `<div class="pe-layer__error">Failed to load content</div>`,
+        });
       }
     }
 
     // Check for pe-dismiss attribute
     const dismissButton = target.closest<HTMLElement>("[pe-dismiss]");
 
-    if (dismissButton && layerManager.getCurrentLayer()) {
+    if (dismissButton && layerManager.getTopLayer()) {
       event.preventDefault();
       layerManager.close();
     }

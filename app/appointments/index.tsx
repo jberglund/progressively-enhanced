@@ -1,3 +1,4 @@
+import type { FC } from "hono/jsx";
 import { Hono } from "hono";
 import { z } from "zod";
 import * as appointments from "../../db/appointments";
@@ -65,7 +66,9 @@ function AppointmentsTable({
               </td>
               <td>
                 {customer ? (
-                  <a href={`/customers/${customer.id}`}>{customer.name}</a>
+                  <a pe-layer="new drawer" href={`/customers/${customer.id}`}>
+                    {customer.name}
+                  </a>
                 ) : (
                   "Ukjent"
                 )}
@@ -214,18 +217,134 @@ const { post } = createFormHandlers({
   },
 });
 
+type FilterParams = {
+  period: "upcoming" | "previous" | "all";
+  sort: "asc" | "desc";
+  date?: string;
+};
+
+const FilterForm: FC<{ params: FilterParams }> = ({ params }) => {
+  return (
+    <form method="get" action={path}>
+      <flex-stack horizontal="end" gap="l">
+        <flex-stack gap="2xs">
+          <label for="sort">Sorter etter</label>
+          <select
+            id="sort"
+            name="sort"
+            class="select"
+            style="width: 16ch;"
+            auto-submit
+          >
+            <option value="asc" selected={params.sort === "asc"}>
+              Eldste først
+            </option>
+            <option value="desc" selected={params.sort === "desc"}>
+              Nyeste først
+            </option>
+          </select>
+        </flex-stack>
+
+        <fieldset>
+          <legend class="mb-2xs">Periode</legend>
+          <flex-stack
+            horizontal="start"
+            gap="m"
+            style="height: var(--input-height-medium);
+          display: flex;
+          align-items: center;"
+          >
+            <flex-stack horizontal="center" gap="2xs">
+              <input
+                type="radio"
+                id="period-upcoming"
+                name="period"
+                value="upcoming"
+                class="radio"
+                auto-submit
+                checked={params.period === "upcoming"}
+              />
+              <label for="period-upcoming">Kommende</label>
+            </flex-stack>
+            <flex-stack horizontal="center" gap="2xs">
+              <input
+                type="radio"
+                id="period-previous"
+                name="period"
+                value="previous"
+                class="radio"
+                auto-submit
+                checked={params.period === "previous"}
+              />
+              <label for="period-previous">Tidligere</label>
+            </flex-stack>
+            <flex-stack horizontal="center" gap="2xs">
+              <input
+                type="radio"
+                id="period-all"
+                name="period"
+                value="all"
+                class="radio"
+                auto-submit
+                checked={params.period === "all"}
+              />
+              <label for="period-all">Alle</label>
+            </flex-stack>
+          </flex-stack>
+        </fieldset>
+
+        <flex-stack gap="2xs">
+          <label for="date">Dato</label>
+          <input
+            type="date"
+            id="date"
+            name="date"
+            class="input"
+            value={params.date || ""}
+          />
+        </flex-stack>
+        <noscript>
+          <button type="submit" class="button" data-variant="secondary">
+            Filtrer
+          </button>
+        </noscript>
+      </flex-stack>
+    </form>
+  );
+};
+
 app.get("/", (c) => {
+  const period = (c.req.query("period") ||
+    "upcoming") as FilterParams["period"];
+  const sort = (c.req.query("sort") || "asc") as FilterParams["sort"];
+  const date = c.req.query("date");
+
   const allAppointments = appointments.getAll();
   const allCustomers = customers.getAll();
   const customerMap = new Map(allCustomers.map((cu) => [cu.id, cu]));
 
   const now = new Date();
-  const upcoming = allAppointments.filter(
-    (apt) => new Date(apt.startTime) >= now,
-  );
-  const previous = allAppointments.filter(
-    (apt) => new Date(apt.startTime) < now,
-  );
+  now.setHours(0, 0, 0, 0);
+
+  let filtered = allAppointments;
+
+  if (date) {
+    const selectedDate = new Date(date);
+    filtered = filtered.filter((apt) => {
+      const aptDate = new Date(apt.startTime);
+      return aptDate.toDateString() === selectedDate.toDateString();
+    });
+  } else if (period === "upcoming") {
+    filtered = filtered.filter((apt) => new Date(apt.startTime) >= now);
+  } else if (period === "previous") {
+    filtered = filtered.filter((apt) => new Date(apt.startTime) < now);
+  }
+
+  filtered.sort((a, b) => {
+    const diff =
+      new Date(a.startTime).getTime() - new Date(b.startTime).getTime();
+    return sort === "desc" ? -diff : diff;
+  });
 
   return c.render(
     <flex-stack gap="l">
@@ -234,25 +353,15 @@ app.get("/", (c) => {
           Ny avtale
         </a>
       </PageHeader>
-      <section>
-        <h2 class="text-l text-bold mb-s">Kommende</h2>
-        {upcoming.length === 0 ? (
-          <p>Ingen kommende avtaler</p>
-        ) : (
-          <AppointmentsTable
-            appointments={upcoming}
-            customerMap={customerMap}
-          />
-        )}
-      </section>
+
+      <FilterForm params={{ period, sort, date }} />
 
       <section>
-        <h2 class="text-l text-bold mb-s">Tidligere</h2>
-        {previous.length === 0 ? (
-          <p>Ingen tidligere avtaler</p>
+        {filtered.length === 0 ? (
+          <p>Ingen avtaler funnet</p>
         ) : (
           <AppointmentsTable
-            appointments={previous}
+            appointments={filtered}
             customerMap={customerMap}
           />
         )}
@@ -282,44 +391,66 @@ app.get("/:id", (c) => {
 
   const startDate = new Date(apt.startTime);
 
+  const endDate = new Date(
+    startDate.getTime() + apt.durationMinutes * 60 * 1000,
+  );
+
+  const timeFormat: Intl.DateTimeFormatOptions = {
+    hour: "2-digit",
+    minute: "2-digit",
+  };
+
   return c.render(
     <flex-stack gap="l">
-      <PageHeader
-        title={`Avtale ${startDate.toLocaleDateString("no")}`}
-        backHref={path}
-        backLabel="Tilbake"
-      />
+      <PageHeader title={apt.service} backHref={path} backLabel="Tilbake" />
 
       <dl>
-        <dt>Kunde</dt>
-        <dd>
-          {customer ? (
-            <a href={`/customers/${customer.id}`}>{customer.name}</a>
-          ) : (
-            "Ukjent"
+        <flex-stack gap="m">
+          <flex-stack gap="3xs">
+            <dt class="text-s">Kunde</dt>
+            <dd class="text-l text-bold">
+              {customer ? (
+                <a href={`/customers/${customer.id}`}>{customer.name}</a>
+              ) : (
+                "Ukjent"
+              )}
+            </dd>
+          </flex-stack>
+
+          <flex-stack horizontal gap="xl">
+            <flex-stack gap="3xs">
+              <dt class="text-s">Dato</dt>
+              <dd class="text-bold">
+                {startDate.toLocaleDateString("no", {
+                  weekday: "long",
+                  day: "numeric",
+                  month: "long",
+                  year: "numeric",
+                })}
+              </dd>
+            </flex-stack>
+
+            <flex-stack gap="3xs">
+              <dt class="text-s">Tid</dt>
+              <dd class="text-bold">
+                {startDate.toLocaleTimeString("no", timeFormat)}–
+                {endDate.toLocaleTimeString("no", timeFormat)}
+              </dd>
+            </flex-stack>
+
+            <flex-stack gap="3xs">
+              <dt class="text-s">Varighet</dt>
+              <dd class="text-bold">{apt.durationMinutes} min</dd>
+            </flex-stack>
+          </flex-stack>
+
+          {apt.notes && (
+            <flex-stack gap="3xs">
+              <dt class="text-s">Notater</dt>
+              <dd>{apt.notes}</dd>
+            </flex-stack>
           )}
-        </dd>
-        <dt>Dato</dt>
-        <dd>
-          {startDate.toLocaleDateString("no", {
-            year: "numeric",
-            month: "long",
-            day: "numeric",
-          })}
-        </dd>
-        <dt>Tid</dt>
-        <dd>
-          {startDate.toLocaleTimeString("no", {
-            hour: "numeric",
-            minute: "numeric",
-          })}
-        </dd>
-        <dt>Varighet</dt>
-        <dd>{apt.durationMinutes} min</dd>
-        <dt>Tjeneste</dt>
-        <dd>{apt.service}</dd>
-        <dt>Notater</dt>
-        <dd>{apt.notes || "—"}</dd>
+        </flex-stack>
       </dl>
 
       <form method="post" action={`${path}/${apt.id}/delete`}>

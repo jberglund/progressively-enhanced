@@ -1,8 +1,16 @@
 import "./enhance-form";
 import "./crude-enhance-form";
-import { LayerManager } from "./manager";
+import { layerManager } from "./manager";
 import { initLinkInterceptor } from "./link-interceptor";
 
-const lm = new LayerManager();
+initLinkInterceptor(layerManager);
 
-initLinkInterceptor(lm);
+document.addEventListener("change", (event) => {
+  if (event.target?.matches("[auto-submit]")) {
+    event.preventDefault();
+    const form = event.target.closest("form");
+    if (form) {
+      form.submit();
+    }
+  }
+});
