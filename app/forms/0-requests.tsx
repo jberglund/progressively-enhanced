@@ -12,14 +12,14 @@ const app = new Hono().basePath("/requests");
 
 app.get("/", (c) => {
   return c.render(
-    <div>
+    <form action="/">
       <h1>I'm a GET 🐐</h1>
-    </div>,
+    </form>,
   );
 });
 
 app.post("/", (c) => {
-  return c.render(<div>I'm a POST ✉️</div>);
+  return c.render(<form action="/requests">I'm a POST ✉️</form>);
 });
 
 export default app;

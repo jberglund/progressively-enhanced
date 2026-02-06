@@ -52,7 +52,7 @@ export const rsvpSchema = z.object({
 
 export function ASeriousForm({ data, errors }: FormProps<typeof rsvpSchema>) {
   return (
-    <x-crude-enhance-form target="main">
+    <enhance-form target="main">
       <form class="premade-form" method="post" action={path}>
         <fieldset>
           <label for="fullName">Full Name</label>
@@ -112,7 +112,7 @@ export function ASeriousForm({ data, errors }: FormProps<typeof rsvpSchema>) {
           Send
         </button>
       </form>
-    </x-crude-enhance-form>
+    </enhance-form>
   );
 }
 

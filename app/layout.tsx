@@ -2,6 +2,8 @@ import { jsxRenderer } from "hono/jsx-renderer";
 import { css, Style } from "hono/css";
 import type { PropsWithChildren } from "hono/jsx";
 
+const layoutEnabled = true;
+
 function NavItem({
   href,
   icon,
@@ -94,7 +96,9 @@ export const fullRenderer = jsxRenderer(
       </head>
 
       <body>
-        <LayoutComposition enabled={true}>{children}</LayoutComposition>
+        <LayoutComposition enabled={layoutEnabled}>
+          {children}
+        </LayoutComposition>
       </body>
     </html>
   ),
@@ -115,10 +119,10 @@ function LayoutComposition({
       </div>
       <main class="site-main">{children}</main>
       <flex-stack horizontal gap="m" class="ml-auto p-m">
-        <a href="/customers/new" class="button" pe-layer="new drawer">
+        <a href="/customers/new" class="button" pe-layer="drawer">
           Ny kunde
         </a>
-        <a href="/appointments/new" class="button" pe-layer="new drawer">
+        <a href="/appointments/new" class="button" pe-layer="drawer">
           Ny avtale
         </a>
       </flex-stack>

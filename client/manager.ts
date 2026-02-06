@@ -1,36 +1,18 @@
-const layerTemplateElement = document.createElement("template");
+import type { LayerOptions } from "./types";
 
-layerTemplateElement.innerHTML = /*html*/ `
-    <pe-popover popover="auto">
-      <pe-popover-content>
-        <pe-outlet></pe-outlet>
-      </pe-popover-content>
-    </pe-popover>
+const focusMap = new WeakMap<HTMLElement, HTMLElement | null>();
+
+const layerTemplate = document.createElement("template");
+layerTemplate.innerHTML = `
+  <pe-popover-dismiss></pe-popover-dismiss>
+  <pe-popover popover="auto">
+    <pe-popover-content>
+      <pe-outlet></pe-outlet>
+    </pe-popover-content>
+  </pe-popover>
 `;
 
-layerTemplateElement.id = "layer-template";
-
-if (!document.getElementById(layerTemplateElement.id)) {
-  document.body.appendChild(layerTemplateElement);
-}
-
-type LayerMode = "dialog" | "drawer";
-
-interface LayerOptions {
-  href: string;
-  mode: LayerMode;
-  html: string;
-}
-
-/**
- * LayerManager
- *
- * Manages a stack of popover layers.
- * Supports 'dialog' and 'drawer' modes.
- */
-class LayerManager {
-  private stack: HTMLElement[] = [];
-
+export class LayerManager {
   create(options: LayerOptions): void {
     const { href, mode, html } = options;
 
@@ -40,49 +22,31 @@ class LayerManager {
       return;
     }
 
-    const popover = this.createPopoverElement(href, mode, html);
-    this.attachListeners(popover);
+    const { popover, dismiss } = this.createPopoverElement(href, mode, html);
+    this.attachListeners(popover, dismiss);
 
     const previouslyFocused = document.activeElement as HTMLElement | null;
-    (popover as any)._previouslyFocused = previouslyFocused;
+    focusMap.set(popover, previouslyFocused);
 
-    document.body.appendChild(popover);
+    // Nested inside top layer so light-dismiss (popover="auto") only closes the current layer
+    const parent = this.getTopLayer() ?? document.body;
+
+    parent.appendChild(dismiss);
+    parent.appendChild(popover);
     popover.showPopover();
-
-    this.setInert(true);
     this.focusLayer(popover);
-    this.stack.push(popover);
   }
 
   close(): void {
-    const popover = this.stack.pop();
+    const popover = this.getTopLayer();
     if (!popover) return;
 
     popover.hidePopover();
-
-    if (this.stack.length === 0) {
-      this.setInert(false);
-    }
-
-    const previouslyFocused = (popover as any)
-      ._previouslyFocused as HTMLElement | null;
-    if (previouslyFocused) {
-      previouslyFocused.focus();
-    }
-  }
-
-  closeAll(): void {
-    while (this.stack.length > 0) {
-      this.close();
-    }
-  }
-
-  isOpen(): boolean {
-    return this.stack.length > 0;
   }
 
   getTopLayer(): HTMLElement | null {
-    return this.stack[this.stack.length - 1] ?? null;
+    const all = document.querySelectorAll<HTMLElement>("pe-popover[popover]");
+    return all[all.length - 1] ?? null;
   }
 
   private findByHref(href: string): HTMLElement | null {
@@ -93,25 +57,17 @@ class LayerManager {
 
   private createPopoverElement(
     href: string,
-    mode: LayerMode,
+    mode: string,
     html: string,
-  ): HTMLElement {
-    const template = document.getElementById(
-      layerTemplateElement.id,
-    ) as HTMLTemplateElement;
-    if (!template) {
-      throw new Error("Layer template not found");
-    }
-
-    const fragment = template.content.cloneNode(true) as DocumentFragment;
+  ): { popover: HTMLElement; dismiss: HTMLElement } {
+    const fragment = layerTemplate.content.cloneNode(true) as DocumentFragment;
+    const dismiss = fragment.querySelector<HTMLElement>("pe-popover-dismiss");
     const popover = fragment.querySelector<HTMLElement>("pe-popover");
 
-    if (!popover) {
-      throw new Error("Popover element not found in template");
+    if (!popover || !dismiss) {
+      throw new Error("Popover or dismiss element not found in template");
     }
 
-    const id = `layer-${href.replace(/[^a-zA-Z0-9]/g, "-")}`;
-    popover.id = id;
     popover.setAttribute("data-href", href);
     popover.setAttribute("mode", mode);
 
@@ -120,26 +76,34 @@ class LayerManager {
       outlet.setHTMLUnsafe(html);
     }
 
-    return popover;
+    return { popover, dismiss };
   }
 
-  private attachListeners(popover: HTMLElement): void {
+  private attachListeners(popover: HTMLElement, dismiss: HTMLElement): void {
     popover.addEventListener("toggle", (e) => {
       if ((e as ToggleEvent).newState === "closed") {
-        this.removeFromStack(popover);
-        if (this.stack.length === 0) {
-          this.setInert(false);
-        }
-        this.removeAfterAnimation(popover);
+        this.handlePopoverClosed(popover, dismiss);
       }
     });
 
-    popover.addEventListener("keydown", (e) => {
-      if (e.key === "Escape") {
-        e.stopPropagation();
-        this.close();
-      }
+    dismiss.addEventListener("click", () => {
+      popover.hidePopover();
     });
+  }
+
+  private handlePopoverClosed(
+    popover: HTMLElement,
+    dismiss: HTMLElement,
+  ): void {
+    const previouslyFocused = focusMap.get(popover);
+    focusMap.delete(popover);
+
+    dismiss.remove();
+    this.removeAfterAnimation(popover);
+
+    if (previouslyFocused) {
+      previouslyFocused.focus();
+    }
   }
 
   private focusLayer(popover: HTMLElement): void {
@@ -149,44 +113,15 @@ class LayerManager {
     focusTarget?.focus();
   }
 
-  private removeFromStack(popover: HTMLElement): void {
-    const index = this.stack.indexOf(popover);
-    if (index > -1) {
-      this.stack.splice(index, 1);
-    }
-  }
-
-  private setInert(inert: boolean): void {
-    for (const child of document.body.children) {
-      if (child instanceof HTMLElement && child.tagName !== "PE-POPOVER") {
-        child.inert = inert;
-      }
-    }
-  }
-
   private removeAfterAnimation(popover: HTMLElement): void {
-    const style = getComputedStyle(popover);
+    const animations = popover.getAnimations();
 
-    const hasAnimation =
-      style.animationName !== "none" && style.animationName !== "";
-
-    const hasTransition =
-      style.transitionDuration !== "0s" && style.transitionProperty !== "none";
-
-    if (hasAnimation) {
-      popover.addEventListener("animationend", () => popover.remove(), {
-        once: true,
-      });
-    } else if (hasTransition) {
-      popover.addEventListener("transitionend", () => popover.remove(), {
-        once: true,
-      });
+    if (animations.length > 0) {
+      Promise.all(animations.map((a) => a.finished)).then(() =>
+        popover.remove(),
+      );
     } else {
       popover.remove();
     }
   }
 }
-
-export const layerManager = new LayerManager();
-
-window.layerManager = layerManager;

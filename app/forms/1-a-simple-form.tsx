@@ -39,6 +39,7 @@ export function SimpleForm({ error }: { error?: string }) {
       <fieldset>
         <label for="name">Name</label>
         <input class="input" type="text" id="name" name="firstname" />
+        <input type="hidden" name="whatevs" value="hej" />
         {error && <p style="color: red;">{error}</p>}
       </fieldset>
       <button class="button" type="submit">

@@ -39,6 +39,7 @@ function CustomerForm({
               errors={errors?.fieldErrors.name}
               required
               validate
+              autofocus
             />
 
             <FormField
@@ -86,7 +87,7 @@ app.get("/", (c) => {
   return c.render(
     <flex-stack gap="l">
       <PageHeader title="Kunder">
-        <a href={`${path}/new`} class="button" pe-layer="new drawer">
+        <a href={`${path}/new`} class="button" pe-layer="dialog">
           Ny kunde
         </a>
       </PageHeader>
@@ -102,7 +103,9 @@ app.get("/", (c) => {
           {allCustomers.map((customer) => (
             <tr key={customer.id}>
               <td>
-                <a href={`${path}/${customer.id}`}>{customer.name}</a>
+                <a pe-layer="drawer" href={`${path}/${customer.id}`}>
+                  {customer.name}
+                </a>
               </td>
               <td>{customer.email}</td>
               <td>{customer.phone}</td>
@@ -149,7 +152,7 @@ app.get("/:id", (c) => {
         <flex-stack horizontal gap="l" class="mb-s">
           <h2 class="text-l text-bold">Avtaler</h2>
           <a
-            pe-layer="new drawer"
+            pe-layer="drawer"
             href={`/appointments/new?customerId=${customer.id}`}
             class="button ml-auto"
             data-size="s"

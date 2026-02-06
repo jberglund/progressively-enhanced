@@ -28,6 +28,7 @@ export function PopoverDemo() {
     "
     >
       <h2>Actions & Popover</h2>
+      <ASeriousForm />
       {/*<flex-stack gap="m">
         <button class="button" popovertarget="action-popover">
           Toggle Popover

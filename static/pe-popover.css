@@ -1,10 +1,14 @@
 pe-popover {
+  --_popover-inset: var(--popover-inset, auto);
+  --_popover-translate-open: var(--popover-translate-open, translate(0, 0));
+  --_popover-translate-closed: var(--popover-translate-closed, translate(0, 0));
+  --_popover-scale-open: var(--popover-scale-open, 1);
+  --_popover-scale-closed: var(--popover-scale-closed, 1);
+  --_popover-content-min-width: var(--popover-content-min-width, 20rem);
+  --_popover-content-max-width: var(--popover-content-max-width, none);
+
   position: fixed;
-  right: 1rem;
-  top: 1rem;
-  bottom: 1rem;
-  height: calc(100% - (1rem * 2));
-  left: unset;
+  inset: var(--_popover-inset);
   z-index: 1000;
   display: grid;
   padding: 0.5rem;
@@ -13,24 +17,42 @@ pe-popover {
   border-radius: 0.75rem;
 }
 
+pe-popover[mode="drawer"] {
+  --popover-inset: 1rem 1rem 1rem auto;
+  --popover-translate-closed: translateX(10%);
+  --popover-content-min-width: 30rem;
+}
+
+pe-popover[mode="dialog"] {
+  --popover-inset: 50% auto auto 50%;
+  --popover-translate-open: translate(-50%, -50%);
+  --popover-translate-closed: translate(-50%, -50%);
+  --popover-scale-open: 1;
+  --popover-scale-closed: 0.95;
+  --popover-content-min-width: 30rem;
+  --popover-content-max-width: 40rem;
+
+  max-height: calc(100% - 2rem);
+  max-width: calc(100% - 2rem);
+}
+
 pe-popover-content {
-  /*margin: 1rem;*/
-  min-width: 30rem;
+  min-width: var(--_popover-content-min-width);
+  max-width: var(--_popover-content-max-width);
+  height: 100%;
+  overflow: hidden;
   background-color: white;
   border: 1px solid #ccc;
-  display: block;
+  display: grid;
+  grid-template-rows: max-content 1fr;
   border-radius: 0.5rem;
   padding-inline: 1rem;
   padding-block: 1rem;
-
-  display: grid;
-  grid-template-rows: max-content 1fr;
 }
 
-:where(pe-popover header) {
-  border-bottom: inherit;
-  margin-inline: -1rem;
-  padding: 0.5rem 1rem;
+pe-popover-dismiss {
+  position: fixed;
+  inset: 0;
 }
 
 pe-outlet {
@@ -43,37 +65,30 @@ pe-outlet {
 
 :where(pe-popover[popover]):popover-open {
   opacity: 1;
-  transform: translateX(0);
+  transform: var(--_popover-translate-open) scale(var(--_popover-scale-open));
 }
 
 :where(pe-popover[popover]) {
-  /* reset */
   border: none;
   background-color: initial;
-
-  /* Final state of the exit animation */
   opacity: 0;
-  transform: translateX(10%);
+  transform: var(--_popover-translate-closed)
+    scale(var(--_popover-scale-closed));
 
   transition:
     opacity 0.15s,
     transform 0.15s,
     overlay 0.15s allow-discrete,
     display 0.15s allow-discrete;
-  /* Equivalent to
-  transition: all 0.7s allow-discrete; */
 }
 
-/* Needs to be after the previous [popover]:popover-open rule
-to take effect, as the specificity is the same */
 @starting-style {
   :where(pe-popover[popover]):popover-open {
     opacity: 0;
-    transform: translateX(10%);
+    transform: var(--_popover-translate-closed)
+      scale(var(--_popover-scale-closed));
   }
 }
-
-/* Transition for the popover's backdrop */
 
 :where(pe-popover[popover])::backdrop {
   background-color: transparent;
@@ -81,16 +96,11 @@ to take effect, as the specificity is the same */
     display 0.15s allow-discrete,
     overlay 0.15s allow-discrete,
     background-color 0.15s;
-  /* Equivalent to
-  transition: all 0.7s allow-discrete; */
 }
 
 :where(pe-popover[popover]):popover-open::backdrop {
   background-color: rgb(222 222 222 / 50%);
 }
-
-/* The nesting selector (&) cannot represent pseudo-elements
-so this starting-style rule cannot be nested */
 
 @starting-style {
   :where(pe-popover[popover]):popover-open::backdrop {

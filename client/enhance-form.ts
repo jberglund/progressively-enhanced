@@ -114,9 +114,6 @@ class EnhanceForm extends HTMLElement {
    * Handles form submission with AJAX.
    * Prevents default form submission and handles the response based on status codes.
    *
-   * @param {Event} event - The form submit event
-   * @returns {Promise<void>}
-   *
    * @remarks
    * Response handling:
    * - 200: Updates the target element with the response
@@ -323,8 +320,8 @@ function viewTransition(fn: () => void) {
 /**
  * Checks if a URL is internal (same origin) or external.
  *
- * @param {string} url - The URL to check
- * @returns {boolean} True if the URL is internal or relative, false if external
+ * @param url - The URL to check
+ * @returns True if the URL is internal or relative, false if external
  */
 const isInternalUrl = (url: string) => {
   try {
@@ -338,9 +335,9 @@ const isInternalUrl = (url: string) => {
 /**
  * Creates a Headers object with a single custom header.
  *
- * @param {EnhancedFormHeader} name - The header name
- * @param {string} value - The header value
- * @returns {Headers} A new Headers object with the specified header
+ * @param name - The header name
+ * @param value - The header value
+ * @returns A new Headers object with the specified header
  */
 const addHeader = (name: EnhancedFormHeader, value: string) => {
   const headers = new Headers();
@@ -351,9 +348,9 @@ const addHeader = (name: EnhancedFormHeader, value: string) => {
 /**
  * Retrieves a custom header value from a fetch response.
  *
- * @param {Response} response - The fetch response
- * @param {EnhancedFormHeader} name - The header name to retrieve
- * @returns {string | null} The header value, or null if not present
+ * @param response - The fetch response
+ * @param name - The header name to retrieve
+ * @returns The header value, or null if not present
  */
 const getHeader = (response: Response, name: EnhancedFormHeader) =>
   response.headers.get(name);

@@ -201,12 +201,12 @@ interface LayerConfig {
 
 ```html
 <!-- Open profile edit in a centered dialog -->
-<a href="/profile/edit" pe-layer="new dialog" pe-target=".edit-form">
+<a href="/profile/edit" pe-layer="dialog" pe-target=".edit-form">
   Edit Profile
 </a>
 
 <!-- Open sidebar navigation in a drawer -->
-<a href="/navigation" pe-layer="new drawer"> Menu </a>
+<a href="/navigation" pe-layer="drawer"> Menu </a>
 
 <!-- Inside a layer, this closes it instead of navigating -->
 <a href="/items" pe-dismiss>Cancel</a>

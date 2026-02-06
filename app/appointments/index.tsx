@@ -66,7 +66,7 @@ function AppointmentsTable({
               </td>
               <td>
                 {customer ? (
-                  <a pe-layer="new drawer" href={`/customers/${customer.id}`}>
+                  <a pe-layer="drawer" href={`/customers/${customer.id}`}>
                     {customer.name}
                   </a>
                 ) : (
@@ -349,7 +349,7 @@ app.get("/", (c) => {
   return c.render(
     <flex-stack gap="l">
       <PageHeader title="Avtaler">
-        <a href={`${path}/new`} class="button" pe-layer="new drawer">
+        <a href={`${path}/new`} class="button" pe-layer="drawer">
           Ny avtale
         </a>
       </PageHeader>
